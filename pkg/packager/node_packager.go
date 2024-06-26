@@ -392,7 +392,7 @@ func (p *NodePackager) npmPruneProduction() error {
 func (p *NodePackager) npmAuditFix() error {
 
 	if !p.AuditFix {
-		utils.Infofln("vulnerability fix disabled: enable with 'audit-fix'")
+		utils.Infofln("vulnerability fix disabled: enable with option '--audit-fix'")
 		return nil
 	}
 
