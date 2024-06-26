@@ -14,7 +14,7 @@ Commit messages should be well formatted, and to make that "standardized", we ar
 
 ## Build
 
-*insert short description on how to build projec*
+*insert short description on how to build project*
 
 ## Test
 

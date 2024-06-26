@@ -1,0 +1,83 @@
+# Configuration file for creating releases.
+# Documentation at http://goreleaser.com
+# Quickstart: https://goreleaser.com/quick-start/
+
+# Local testing: goreleaser release --snapshot --clean
+# Verify .goreleaser.yaml: goreleaser check
+before:
+  hooks:
+    - go get -u ./...
+    - go mod vendor
+    - go mod tidy
+    - go vet ./...
+
+builds:
+  - main: ./cmd/node-packager
+    id: "build_linux_amd64"
+    binary: node-packager
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X buildinfo.version={{.Version}} -X buildinfo.commit={{.Commit}} -X buildinfo.date={{ .CommitDate }}
+
+  - main: ./cmd/node-packager
+    id: "build_linux_arm64"
+    binary: node-packager
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - arm64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X buildinfo.version={{.Version}} -X buildinfo.commit={{.Commit}} -X buildinfo.date={{ .CommitDate }}
+
+  - main: ./cmd/node-packager
+    id: "build_windows_amd64"
+    binary: node-packager
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X buildinfo.version={{.Version}} -X buildinfo.commit={{.Commit}} -X buildinfo.date={{ .CommitDate }}
+
+source:
+  enabled: false
+  name_template: '{{ .ProjectName }}-{{ .Version }}_source'
+
+archives:
+  - format_overrides:
+    - goos: windows
+      format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch
+      - go mod tidy
