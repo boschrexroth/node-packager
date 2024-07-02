@@ -236,7 +236,7 @@ func HumanizedFileSize(file string) (string, error) {
 	}
 }
 
-// FileSize returns the size of the gien file in bytes.
+// FileSize returns the size of the given file in bytes.
 func FileSize(file string) (int64, error) {
 	fi, err := os.Stat(file)
 
