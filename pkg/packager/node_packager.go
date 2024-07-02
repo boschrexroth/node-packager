@@ -30,7 +30,6 @@ const (
 	defaultAuditLevel  = "high"
 	defaultRegistry    = "https://registry.npmjs.org"
 	spinnerTypeLinux   = 11 // ⣯ (not working on windows) -> ./vendor/github.com/schollz/progressbar/v3/spinners.go
-	skipPrune          = true
 )
 
 type NodePackager struct {
@@ -165,13 +164,8 @@ func (p *NodePackager) Pack() (string, error) {
 	}
 
 	// ******************************************************
-	// PACKING PREPARING
+	// PREPARING
 	// ******************************************************
-	// Pruning is not a must because of --omit=dev flag, but just to really ensure all dev dependencies are removed
-	if err := p.npmPruneProduction(); err != nil {
-		return p.finish(err)
-	}
-
 	if err := p.npmBundleDeps(); err != nil {
 		return p.finish(err)
 	}
@@ -355,37 +349,6 @@ func (p *NodePackager) npmBundleDeps() error {
 	}
 
 	return p.execute(exec.Command("node", nodeArgs...))
-}
-
-// npmPruneProduction runs 'npm prune' in production mode.
-func (p *NodePackager) npmPruneProduction() error {
-
-	if skipPrune {
-		if p.Verbose {
-			utils.Printfln("pruning skipped")
-		}
-		return nil
-	}
-
-	p.spinner.Describe("pruning ...")
-
-	npmArgs := []string{
-		"prune",
-		fmt.Sprintf("--prefix=%s", p.tempDir),
-		fmt.Sprintf("--registry=%s", p.Registry),
-		"--omit=dev",
-		"--ignore-scripts",
-		"--no-audit"}
-
-	if len(p.Proxy) > 0 {
-		npmArgs = append(npmArgs, fmt.Sprintf("--proxy=%s", p.Proxy))
-	}
-
-	if p.Verbose {
-		npmArgs = append(npmArgs, "--verbose")
-	}
-
-	return p.execute(exec.Command("npm", npmArgs...))
 }
 
 // npmAuditFix runs 'npm audit fix' in production mode.
