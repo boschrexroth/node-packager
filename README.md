@@ -2,7 +2,7 @@
 
 Packs a Node-RED library to a tarball (*.tgz) for ctrlX Node-RED palette import.
 
-_IMPORTANT__:
+__IMPORTANT__:
 
 Imported libraries override libraries, shipped with the Node-RED App.
 This libraries won't be updated on future App updates.
