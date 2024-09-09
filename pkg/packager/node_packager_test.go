@@ -18,10 +18,13 @@ import (
 )
 
 const (
-	TestPackageA                   = "node-red-contrib-data-view"
-	TestPackageB                   = "node-red-contrib-full-msg-json-schema-validation"
-	TestPackageC                   = "node-red-contrib-opcua"
-	TestPackageNativeWithPrebuilds = "node-red-contrib-usb" //"node-red-contrib-modbus"
+	TestLibDataView            = "node-red-contrib-data-view"
+	TestLibOpcUa               = "node-red-contrib-opcua"
+	TestLibNativeWithPrebuilds = "node-red-contrib-usb" //"node-red-contrib-modbus"
+
+	TestLibVersioned       = TestLibDataView + "@0.0.3"
+	TestLibScoped          = "@flowfuse/node-red-dashboard"
+	TestLibScopedVersioned = TestLibScoped + "@1.16.0"
 )
 
 type NodePackagerTestSuite struct {
@@ -79,60 +82,11 @@ func afterAll(s *NodePackagerTestSuite) {
 	// Not used
 }
 
-func (s *NodePackagerTestSuite) TestPackASimple() {
+func (s *NodePackagerTestSuite) TestPackDataView() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
-	}
-
-	// Act
-	tarball, err := s.p.Pack()
-
-	// Assert
-	s.NoError(err)
-	s.NotEmpty(tarball)
-	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
-	s.NoDirExists(s.p.tempDir)
-
-	s.False(s.p.hasNativeModules)
-	s.False(s.p.hasNativePrebuilds)
-	s.False(s.p.hasAllNativePrebuildsLinuxAmd64)
-	s.False(s.p.hasAllNativePrebuildsLinuxArm64)
-}
-
-func (s *NodePackagerTestSuite) TestPackBSimple() {
-
-	// Arrange
-	s.p = NodePackager{
-		LibraryName: TestPackageB,
-	}
-
-	// Act
-	tarball, err := s.p.Pack()
-
-	// Assert
-	s.NoError(err)
-	s.NotEmpty(tarball)
-	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
-	s.NoDirExists(s.p.tempDir)
-
-	s.False(s.p.hasNativeModules)
-	s.False(s.p.hasNativePrebuilds)
-	s.False(s.p.hasAllNativePrebuildsLinuxAmd64)
-	s.False(s.p.hasAllNativePrebuildsLinuxArm64)
-}
-
-func (s *NodePackagerTestSuite) TestPackCSimple() {
-
-	s.T().Skip()
-
-	// Arrange
-	s.p = NodePackager{
-		LibraryName: TestPackageC,
-		Verbose:     true,
+		LibraryName: TestLibDataView,
 	}
 
 	// Act
@@ -155,7 +109,7 @@ func (s *NodePackagerTestSuite) TestPackNativeWithPrebuilds() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageNativeWithPrebuilds,
+		LibraryName: TestLibNativeWithPrebuilds,
 		NoAudit:     true,
 	}
 
@@ -175,11 +129,109 @@ func (s *NodePackagerTestSuite) TestPackNativeWithPrebuilds() {
 	s.True(s.p.hasAllNativePrebuildsLinuxArm64)
 }
 
+func (s *NodePackagerTestSuite) TestPackVersioned() {
+
+	// Arrange
+	s.p = NodePackager{
+		LibraryName: TestLibVersioned,
+		NoAudit:     true,
+	}
+
+	// Act
+	tarball, err := s.p.Pack()
+
+	// Assert
+	s.NoError(err)
+	s.NotEmpty(tarball)
+	s.FileExists(tarball)
+	s.Equal(".tgz", filepath.Ext(tarball))
+	s.NoDirExists(s.p.tempDir)
+
+	s.False(s.p.hasNativeModules)
+	s.False(s.p.hasNativePrebuilds)
+	s.False(s.p.hasAllNativePrebuildsLinuxAmd64)
+	s.False(s.p.hasAllNativePrebuildsLinuxArm64)
+}
+
+func (s *NodePackagerTestSuite) TestPackScoped() {
+
+	// Arrange
+	s.p = NodePackager{
+		LibraryName: TestLibScoped,
+		NoAudit:     true,
+	}
+
+	// Act
+	tarball, err := s.p.Pack()
+
+	// Assert
+	s.NoError(err)
+	s.NotEmpty(tarball)
+	s.FileExists(tarball)
+	s.Equal(".tgz", filepath.Ext(tarball))
+	s.NoDirExists(s.p.tempDir)
+
+	s.False(s.p.hasNativeModules)
+	s.False(s.p.hasNativePrebuilds)
+	s.False(s.p.hasAllNativePrebuildsLinuxAmd64)
+	s.False(s.p.hasAllNativePrebuildsLinuxArm64)
+}
+
+func (s *NodePackagerTestSuite) TestPackScopedVersioned() {
+
+	// Arrange
+	s.p = NodePackager{
+		LibraryName: TestLibScopedVersioned,
+		NoAudit:     true,
+	}
+
+	// Act
+	tarball, err := s.p.Pack()
+
+	// Assert
+	s.NoError(err)
+	s.NotEmpty(tarball)
+	s.FileExists(tarball)
+	s.Equal(".tgz", filepath.Ext(tarball))
+	s.NoDirExists(s.p.tempDir)
+
+	s.False(s.p.hasNativeModules)
+	s.False(s.p.hasNativePrebuilds)
+	s.False(s.p.hasAllNativePrebuildsLinuxAmd64)
+	s.False(s.p.hasAllNativePrebuildsLinuxArm64)
+}
+
+func (s *NodePackagerTestSuite) TestPackOpcUa() {
+
+	s.T().Skip()
+
+	// Arrange
+	s.p = NodePackager{
+		LibraryName: TestLibOpcUa,
+		Verbose:     true,
+	}
+
+	// Act
+	tarball, err := s.p.Pack()
+
+	// Assert
+	s.NoError(err)
+	s.NotEmpty(tarball)
+	s.FileExists(tarball)
+	s.Equal(".tgz", filepath.Ext(tarball))
+	s.NoDirExists(s.p.tempDir)
+
+	s.False(s.p.hasNativeModules)
+	s.False(s.p.hasNativePrebuilds)
+	s.False(s.p.hasAllNativePrebuildsLinuxAmd64)
+	s.False(s.p.hasAllNativePrebuildsLinuxArm64)
+}
+
 func (s *NodePackagerTestSuite) TestPackKeepTmp() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
+		LibraryName: TestLibDataView,
 		KeepTmp:     true,
 	}
 
@@ -198,7 +250,7 @@ func (s *NodePackagerTestSuite) TestPackAuditFix() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
+		LibraryName: TestLibDataView,
 		AuditFix:    true,
 	}
 
@@ -217,7 +269,7 @@ func (s *NodePackagerTestSuite) TestPackNoAudit() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
+		LibraryName: TestLibDataView,
 		NoAudit:     true,
 	}
 
@@ -236,7 +288,7 @@ func (s *NodePackagerTestSuite) TestPackVerbose() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
+		LibraryName: TestLibDataView,
 		Verbose:     true,
 	}
 
@@ -257,11 +309,11 @@ func (s *NodePackagerTestSuite) TestPackSrcDir() {
 
 	// Install a node module as source to temp directory
 	tmpDir := s.T().TempDir()
-	srcDir := path.Join(tmpDir, TestPackageA)
+	srcDir := path.Join(tmpDir, TestLibDataView)
 
 	args := []string{
 		"install",
-		TestPackageA,
+		TestLibDataView,
 		fmt.Sprintf("--prefix=%s", srcDir),
 		"--no-fund",
 		"--omit=dev",
@@ -270,7 +322,7 @@ func (s *NodePackagerTestSuite) TestPackSrcDir() {
 	s.NoError(s.p.execute(exec.Command("npm", args...)))
 
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
+		LibraryName: TestLibDataView,
 		SrcDir:      srcDir,
 	}
 
@@ -303,7 +355,7 @@ func (s *NodePackagerTestSuite) TestInvalidSrcDir() {
 
 	// Arrange
 	s.p = NodePackager{
-		LibraryName: TestPackageA,
+		LibraryName: TestLibDataView,
 		SrcDir:      path.Join(s.T().TempDir(), "42"),
 	}
 

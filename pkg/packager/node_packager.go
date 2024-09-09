@@ -46,13 +46,14 @@ type NodePackager struct {
 	KeepTmp  bool
 
 	// Private
-	buildOn                 string
-	libraryNameWithoutScope string
-	tarballName             string
-	tarballPath             string
-	tarballSize             string
-	tempDir                 string
-	workingDir              string
+	buildOn                   string
+	libraryNameWithoutVersion string
+	tarballPrefix             string
+	tarballName               string
+	tarballPath               string
+	tarballSize               string
+	tempDir                   string
+	workingDir                string
 
 	hasNativeModules                bool
 	hasNativePrebuilds              bool
@@ -194,8 +195,16 @@ func (p *NodePackager) reset() {
 	p.hasAllNativePrebuildsLinuxAmd64 = true // Default
 	p.hasAllNativePrebuildsLinuxArm64 = true // Default
 	p.buildOn = fmt.Sprintf("%s_%s", runtime.GOOS, runtime.GOARCH)
-	p.libraryNameWithoutScope = strings.Split(p.LibraryName, "@")[0] // Package without scope (company prefix e.g. '@angular/http').
 	p.SrcDir = os.ExpandEnv(p.SrcDir)
+
+	versionIndex := strings.LastIndex(p.LibraryName, "@")
+	if versionIndex <= 0 {
+		// no version present
+		p.libraryNameWithoutVersion = p.LibraryName
+	} else {
+		p.libraryNameWithoutVersion = p.LibraryName[:versionIndex]
+	}
+	p.tarballPrefix = strings.ReplaceAll(strings.ReplaceAll(p.libraryNameWithoutVersion, "/", "-"), "@", "")
 
 	if runtime.GOOS == "linux" {
 		p.spinner = bar.NewOptions(-1, bar.OptionSpinnerType(spinnerTypeLinux))
@@ -470,7 +479,7 @@ func (p *NodePackager) npmPack() error {
 func (p *NodePackager) moveLibraryModule() error {
 	p.spinner.Describe("preparing library ...")
 
-	subModulePath := path.Join(p.tempDir, "node_modules", p.libraryNameWithoutScope)
+	subModulePath := path.Join(p.tempDir, "node_modules", p.libraryNameWithoutVersion)
 	entries, err := os.ReadDir(subModulePath)
 	if err != nil {
 		return err
@@ -627,7 +636,7 @@ func (p *NodePackager) modifyPackageJSON() error {
 
 	// Ensure 'name', because mandatory
 	if _, exist := jsonMap["name"]; !exist {
-		jsonMap["name"] = p.libraryNameWithoutScope
+		jsonMap["name"] = p.libraryNameWithoutVersion
 	}
 
 	// Write modified map back to 'package.json'
@@ -725,7 +734,7 @@ func (p *NodePackager) findTarball() (string, string, error) {
 			return filepath.SkipDir
 		}
 
-		if strings.HasPrefix(fi.Name(), p.LibraryName) && filepath.Ext(fi.Name()) == ".tgz" {
+		if strings.HasPrefix(fi.Name(), p.tarballPrefix) && filepath.Ext(fi.Name()) == ".tgz" {
 			tarballPath = path
 			return filepath.SkipAll
 		}
@@ -790,7 +799,7 @@ func (p *NodePackager) getWorkingDir() error {
 func (p *NodePackager) createTempDir() error {
 
 	// Create temp dir
-	tempDir, err := os.MkdirTemp(p.workingDir, p.libraryNameToFolderName(p.libraryNameWithoutScope)+"-")
+	tempDir, err := os.MkdirTemp(p.workingDir, p.libraryNameToFolderName(p.libraryNameWithoutVersion)+"-")
 	if err != nil {
 		return err
 	}

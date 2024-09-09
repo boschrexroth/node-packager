@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/golang/go"
-    Version="1.21.10"
+    Version="1.22.6"
     HomePage="https://github.com/golang/go"
     Usage="AsIs"
     IntegrationMechanism="Go"
@@ -210,7 +210,7 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/schollz/progressbar/v3"
-    Version="3.14.3"
+    Version="3.14.6"
     HomePage="https://github.com/schollz/progressbar/v3"
     Usage="AsIs"
     IntegrationMechanism="Go"
@@ -290,13 +290,13 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/sys"
-    Version="0.20.0"
+    Version="0.24.0"
     HomePage="https://golang.org/x/sys"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
     <Copyright>
-      <Text><![CDATA[Copyright (c) 2009 The Go Authors. All rights reserved.]]></Text>
+      <Text><![CDATA[Copyright 2009 The Go Authors.]]></Text>
     </Copyright>
     <Fulfilled />
     <Unconfirmed />
@@ -304,7 +304,7 @@ SOFTWARE.
       Name="BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License"
       Spdx="BSD-3-Clause">
       <Text
-        Format="txt"><![CDATA[Copyright (c) 2009 The Go Authors. All rights reserved.
+        Format="txt"><![CDATA[Copyright 2009 The Go Authors.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -316,7 +316,7 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
+   * Neither the name of Google LLC nor the names of its
 contributors may be used to endorse or promote products derived from
 this software without specific prior written permission.
 
@@ -336,13 +336,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/term"
-    Version="0.20.0"
+    Version="0.23.0"
     HomePage="https://golang.org/x/term"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
     <Copyright>
-      <Text><![CDATA[Copyright (c) 2009 The Go Authors. All rights reserved.]]></Text>
+      <Text><![CDATA[Copyright 2009 The Go Authors.]]></Text>
     </Copyright>
     <Fulfilled />
     <Unconfirmed />
@@ -350,7 +350,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       Name="BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License"
       Spdx="BSD-3-Clause">
       <Text
-        Format="txt"><![CDATA[Copyright (c) 2009 The Go Authors. All rights reserved.
+        Format="txt"><![CDATA[Copyright 2009 The Go Authors.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -362,7 +362,7 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
+   * Neither the name of Google LLC nor the names of its
 contributors may be used to endorse or promote products derived from
 this software without specific prior written permission.
 
