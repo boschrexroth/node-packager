@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FossInfo xmlns="http://rexroth/2/foss-components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://rexroth/2/foss-components ./LicenseInfoFOSSv2.xsd"
-  Name="tool.node-packager">
+  xsi:schemaLocation="http://rexroth/2/foss-components ./LicenseInfoFOSSv2.xsd">
   <FossComponent
     Name="github.com/davecgh/go-spew"
     Version="1.1.1"
     HomePage="https://github.com/davecgh/go-spew"
+    Purl="pkg:golang/github.com/davecgh/go-spew@v1.1.1"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -38,8 +38,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/golang/go"
-    Version="1.22.6"
+    Version="1.22.8"
     HomePage="https://github.com/golang/go"
+    Purl="pkg:golang/github.com/golang/go@v1.22.8"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -86,6 +87,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     Name="github.com/mitchellh/colorstring"
     Version="0.0.0-20190213212951-d06e56a500db"
     HomePage="https://github.com/mitchellh/colorstring"
+    Purl="pkg:golang/github.com/mitchellh/colorstring@v0.0.0-20190213212951-d06e56a500db"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -126,6 +128,7 @@ THE SOFTWARE.
     Name="github.com/pmezard/go-difflib"
     Version="1.0.0"
     HomePage="https://github.com/pmezard/go-difflib"
+    Purl="pkg:golang/github.com/pmezard/go-difflib@v1.0.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -172,6 +175,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     Name="github.com/rivo/uniseg"
     Version="0.4.7"
     HomePage="https://github.com/rivo/uniseg"
+    Purl="pkg:golang/github.com/rivo/uniseg@v0.4.7"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -210,8 +214,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/schollz/progressbar/v3"
-    Version="3.14.6"
+    Version="3.16.1"
     HomePage="https://github.com/schollz/progressbar/v3"
+    Purl="pkg:golang/github.com/schollz/progressbar/v3@v3.16.1"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -252,6 +257,7 @@ SOFTWARE.
     Name="github.com/stretchr/testify"
     Version="1.9.0"
     HomePage="https://github.com/stretchr/testify"
+    Purl="pkg:golang/github.com/stretchr/testify@v1.9.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -290,8 +296,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/sys"
-    Version="0.24.0"
+    Version="0.26.0"
     HomePage="https://golang.org/x/sys"
+    Purl="pkg:golang/golang.org/x/sys@v0.26.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -336,8 +343,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/term"
-    Version="0.23.0"
+    Version="0.25.0"
     HomePage="https://golang.org/x/term"
+    Purl="pkg:golang/golang.org/x/term@v0.25.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -384,6 +392,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     Name="gopkg.in/yaml.v3"
     Version="3.0.1"
     HomePage="https://gopkg.in/yaml.v3"
+    Purl="pkg:golang/gopkg.in/yaml.v3@v3.0.1"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -402,8 +411,7 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
-]]></Notice>
+limitations under the License.]]></Notice>
     </Copyright>
     <Fulfilled />
     <Unconfirmed />
