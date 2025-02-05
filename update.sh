@@ -2,7 +2,7 @@
 
 #go
 old_go_version="1.22"
-new_go_version="1.22"
+new_go_version="1.23"
 
 #seek & replace
 echo "go ${old_go_version} -> ${new_go_version}" 
