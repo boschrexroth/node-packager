@@ -727,12 +727,6 @@ func (p *NodePackager) removeNativeBindingRebuild(dir string) error {
 // movePackage moves the tarball to the working directory.
 func (p *NodePackager) movePackage() error {
 
-	// // Find the tarball
-	// tarballPath, tarballName, err := p.findTarball()
-	// if err != nil {
-	// 	return err
-	// }
-
 	// Move the tarball to working dir
 	if p.Verbose {
 		utils.Printfln("moving %s -> %s ...", p.tarballPath, p.workingDir)
