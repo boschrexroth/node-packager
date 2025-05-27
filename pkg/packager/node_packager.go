@@ -6,9 +6,10 @@
 package packager
 
 import (
+	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"log"
 	"os"
@@ -48,7 +49,6 @@ type NodePackager struct {
 	// Private
 	buildOn                   string
 	libraryNameWithoutVersion string
-	tarballPrefix             string
 	tarballName               string
 	tarballPath               string
 	tarballSize               string
@@ -89,8 +89,8 @@ func (p *NodePackager) Pack() (string, error) {
 	// Provide progress if no verbosity selected
 	if !p.Verbose {
 		go func() {
-			tick := time.NewTicker(progressInterval)
-			for range tick.C {
+			tick := time.Tick(progressInterval)
+			for range tick {
 				if err := p.spinner.Add(1); err != nil {
 					return
 				}
@@ -204,7 +204,6 @@ func (p *NodePackager) reset() {
 	} else {
 		p.libraryNameWithoutVersion = p.LibraryName[:versionIndex]
 	}
-	p.tarballPrefix = strings.ReplaceAll(strings.ReplaceAll(p.libraryNameWithoutVersion, "/", "-"), "@", "")
 
 	if runtime.GOOS == "linux" {
 		p.spinner = bar.NewOptions(-1, bar.OptionSpinnerType(spinnerTypeLinux))
@@ -297,7 +296,7 @@ func (p *NodePackager) npmInstall(packageName string) error {
 		npmArgs = append(npmArgs, packageName)
 	}
 
-	return p.execute(exec.Command("npm", npmArgs...))
+	return p.execute(exec.Command("npm", npmArgs...)) //nolint:gosec
 }
 
 // npmBundleDeps installs module 'https://www.npmjs.com/package/bundle-deps' and runs 'bundle-deps' for current library to bundle the dependencies.
@@ -324,7 +323,7 @@ func (p *NodePackager) npmBundleDeps() error {
 	}
 
 	// Install bundle-deps
-	err := p.execute(exec.Command("npm", npmArgs...))
+	err := p.execute(exec.Command("npm", npmArgs...)) //nolint:gosec
 	if err != nil {
 		return err
 	}
@@ -357,7 +356,7 @@ func (p *NodePackager) npmBundleDeps() error {
 		return err
 	}
 
-	return p.execute(exec.Command("node", nodeArgs...))
+	return p.execute(exec.Command("node", nodeArgs...)) //nolint:gosec
 }
 
 // npmAuditFix runs 'npm audit fix' in production mode.
@@ -388,7 +387,7 @@ func (p *NodePackager) npmAuditFix() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	if err := p.execute(exec.Command("npm", npmArgs...)); err != nil {
+	if err := p.execute(exec.Command("npm", npmArgs...)); err != nil { //nolint:gosec
 		return fmt.Errorf("vulnerability fix (level: %v) failed: try again with a decreased 'audit-level'", p.AuditLevel)
 	}
 
@@ -422,11 +421,11 @@ func (p *NodePackager) npmAudit() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	if err := p.execute(exec.Command("npm", npmArgs...)); err != nil {
+	if err := p.execute(exec.Command("npm", npmArgs...)); err != nil { //nolint:gosec
 		return fmt.Errorf("vulnerability audit (level: %v) failed: try again with '--no-audit' or increased 'audit-level'", p.AuditLevel)
 	}
 
-	return p.execute(exec.Command("npm", npmArgs...))
+	return p.execute(exec.Command("npm", npmArgs...)) //nolint:gosec
 }
 
 // npmPack packs the package to a tarball (*.tgz).
@@ -468,10 +467,12 @@ func (p *NodePackager) npmPack() error {
 		return err
 	}
 
-	err := p.execute(exec.Command("npm", npmArgs...))
+	tarballName, err := p.executeStdout(exec.Command("npm", npmArgs...)) //nolint:gosec
 	if err != nil {
 		return err
 	}
+	p.tarballName = strings.TrimSpace(tarballName)
+	p.tarballPath = path.Join(p.tempDir, p.tarballName)
 	return nil
 }
 
@@ -615,8 +616,8 @@ func (p *NodePackager) modifyPackageJSON() error {
 	packageJSONPath := path.Join(p.tempDir, "package.json")
 
 	// Read 'package.json' into a map
-	var jsonMap map[string]interface{}
-	bytes, err := os.ReadFile(packageJSONPath)
+	var jsonMap map[string]any
+	bytes, err := os.ReadFile(packageJSONPath) //nolint:gosec
 	if err != nil {
 		return err
 	}
@@ -666,12 +667,12 @@ func (p *NodePackager) removeNativeBindingRebuild(dir string) error {
 	}
 
 	// Read 'package.json' into a map
-	bytes, err := os.ReadFile(packageJSONPath)
+	bytes, err := os.ReadFile(packageJSONPath) //nolint:gosec
 	if err != nil {
 		return err
 	}
 
-	var jsonMap map[string]interface{}
+	var jsonMap map[string]any
 
 	// Unmarshal to map
 	if err := json.Unmarshal(bytes, &jsonMap); err != nil {
@@ -679,7 +680,7 @@ func (p *NodePackager) removeNativeBindingRebuild(dir string) error {
 	}
 
 	// Check for scripts
-	scripts, ok := jsonMap["scripts"].(map[string]interface{})
+	scripts, ok := jsonMap["scripts"].(map[string]any)
 	if !ok {
 		return nil
 	}
@@ -723,60 +724,26 @@ func (p *NodePackager) removeNativeBindingRebuild(dir string) error {
 	return os.WriteFile(packageJSONPath, buffer, utils.DefaultFilePermissionsFiles)
 }
 
-// findTarball searches for the packed tarball.
-func (p *NodePackager) findTarball() (string, string, error) {
-
-	tarballPath := ""
-	err := filepath.Walk(p.tempDir, func(path string, fi os.FileInfo, err error) error {
-
-		//We expect the generated tarball to be placed at top level (temp dir)
-		if fi.IsDir() && (path != p.tempDir) {
-			return filepath.SkipDir
-		}
-
-		if strings.HasPrefix(fi.Name(), p.tarballPrefix) && filepath.Ext(fi.Name()) == ".tgz" {
-			tarballPath = path
-			return filepath.SkipAll
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return "", "", err
-	}
-
-	// tarball not found
-	if len(tarballPath) == 0 {
-		return "", "", errors.New("tarball not found")
-	}
-
-	// tarball found
-	_, tarballName := filepath.Split(tarballPath)
-	return tarballPath, tarballName, nil
-}
-
 // movePackage moves the tarball to the working directory.
 func (p *NodePackager) movePackage() error {
 
-	// Find the tarball
-	tarballPath, tarballName, err := p.findTarball()
-	if err != nil {
-		return err
-	}
+	// // Find the tarball
+	// tarballPath, tarballName, err := p.findTarball()
+	// if err != nil {
+	// 	return err
+	// }
 
 	// Move the tarball to working dir
 	if p.Verbose {
-		utils.Printfln("moving %s -> %s ...", tarballPath, p.workingDir)
+		utils.Printfln("moving %s -> %s ...", p.tarballPath, p.workingDir)
 	}
-	to := path.Join(p.workingDir, tarballName)
-	err = os.Rename(tarballPath, to)
+	to := path.Join(p.workingDir, p.tarballName)
+	err := os.Rename(p.tarballPath, to)
 	if err != nil {
 		return err
 	}
 
 	p.tarballPath = to
-	p.tarballName = tarballName
 	p.tarballSize, err = utils.HumanizedFileSize(p.tarballPath)
 	return err
 }
@@ -833,6 +800,26 @@ func (p *NodePackager) execute(cmd *exec.Cmd) error {
 	}
 
 	return cmd.Run()
+}
+
+// executeStdout executes a command and returns the console output.
+func (p *NodePackager) executeStdout(cmd *exec.Cmd) (string, error) {
+	var output bytes.Buffer
+
+	if p.Verbose {
+		utils.Printfln("executing %s %v ...", cmd.Path, strings.Join(cmd.Args, " "))
+		cmd.Stdout = io.MultiWriter(os.Stdout, &output)
+		cmd.Stderr = os.Stderr
+	} else {
+		cmd.Stdout = &output
+	}
+
+	err := cmd.Run()
+	if err != nil {
+		return "", err
+	}
+
+	return output.String(), nil
 }
 
 // libraryNameToFolderName returns the library name as a folder name by replacing all file path chars ('/', ':') and '@' with underscores '_'.

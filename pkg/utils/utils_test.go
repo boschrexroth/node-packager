@@ -42,7 +42,7 @@ func TestCreateFile(t *testing.T) {
 
 	// Assert
 	assert.FileExists(t, file)
-	bytes, err := os.ReadFile(file)
+	bytes, err := os.ReadFile(file) //nolint:gosec
 	assert.NoError(t, err)
 	assert.Equal(t, value, string(bytes))
 }
@@ -70,12 +70,12 @@ func TestCopyFile(t *testing.T) {
 	assert.NoError(t, CopyFile(src, dst))
 
 	// Assert
-	srcBytes, err := os.ReadFile(src)
+	srcBytes, err := os.ReadFile(src) //nolint:gosec
 	assert.NoError(t, err)
 	assert.Equal(t, value, string(srcBytes))
 
 	assert.FileExists(t, dst)
-	dstBytes, err := os.ReadFile(dst)
+	dstBytes, err := os.ReadFile(dst) //nolint:gosec
 	assert.NoError(t, err)
 
 	assert.EqualValues(t, srcBytes, dstBytes)
@@ -151,26 +151,26 @@ func TestCopyDir(t *testing.T) {
 	assert.FileExists(t, path.Join(dst, file3))
 
 	// Assert
-	srcBytes0, err := os.ReadFile(path.Join(src, file0))
+	srcBytes0, err := os.ReadFile(path.Join(src, file0)) //nolint:gosec
 	assert.NotEmpty(t, srcBytes0)
 	assert.NoError(t, err)
-	srcBytes1, err := os.ReadFile(path.Join(src, file1))
+	srcBytes1, err := os.ReadFile(path.Join(src, file1)) //nolint:gosec
 	assert.NotEmpty(t, srcBytes1)
 	assert.NoError(t, err)
-	srcBytes2, err := os.ReadFile(path.Join(src, file2))
+	srcBytes2, err := os.ReadFile(path.Join(src, file2)) //nolint:gosec
 	assert.NotEmpty(t, srcBytes2)
 	assert.NoError(t, err)
-	srcBytes3, err := os.ReadFile(path.Join(src, file3))
+	srcBytes3, err := os.ReadFile(path.Join(src, file3)) //nolint:gosec
 	assert.NotEmpty(t, srcBytes3)
 	assert.NoError(t, err)
 
-	dstBytes0, err := os.ReadFile(path.Join(dst, file0))
+	dstBytes0, err := os.ReadFile(path.Join(dst, file0)) //nolint:gosec
 	assert.NoError(t, err)
-	dstBytes1, err := os.ReadFile(path.Join(dst, file1))
+	dstBytes1, err := os.ReadFile(path.Join(dst, file1)) //nolint:gosec
 	assert.NoError(t, err)
-	dstBytes2, err := os.ReadFile(path.Join(dst, file2))
+	dstBytes2, err := os.ReadFile(path.Join(dst, file2)) //nolint:gosec
 	assert.NoError(t, err)
-	dstBytes3, err := os.ReadFile(path.Join(dst, file3))
+	dstBytes3, err := os.ReadFile(path.Join(dst, file3)) //nolint:gosec
 	assert.NoError(t, err)
 
 	assert.EqualValues(t, srcBytes0, dstBytes0)
@@ -201,11 +201,11 @@ func TestCopyDirDstExists(t *testing.T) {
 	assert.FileExists(t, path.Join(dst, file))
 
 	// Assert
-	srcBytes, err := os.ReadFile(path.Join(src, file))
+	srcBytes, err := os.ReadFile(path.Join(src, file)) //nolint:gosec
 	assert.NotEmpty(t, srcBytes)
 	assert.NoError(t, err)
 
-	dstBytes, err := os.ReadFile(path.Join(dst, file))
+	dstBytes, err := os.ReadFile(path.Join(dst, file)) //nolint:gosec
 	assert.NoError(t, err)
 	assert.EqualValues(t, srcBytes, dstBytes)
 }

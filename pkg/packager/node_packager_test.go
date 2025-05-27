@@ -28,13 +28,14 @@ const (
 )
 
 type NodePackagerTestSuite struct {
-	suite.Suite
 	p NodePackager
+
+	suite.Suite
 }
 
-func TestSuite(t *testing.T) {
+func TestNodePackagerTestSuite(t *testing.T) {
 	// Create a new suite for tests
-	//s = new(AppTestSuite)
+	//s = new(NodePackagerTestSuite)
 	suite.Run(t, new(NodePackagerTestSuite))
 }
 
@@ -319,7 +320,7 @@ func (s *NodePackagerTestSuite) TestPackSrcDir() {
 		"--omit=dev",
 		"--no-audit"}
 
-	s.NoError(s.p.execute(exec.Command("npm", args...)))
+	s.NoError(s.p.execute(exec.Command("npm", args...))) //nolint:gosec
 
 	s.p = NodePackager{
 		LibraryName: TestLibDataView,

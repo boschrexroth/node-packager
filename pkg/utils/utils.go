@@ -8,6 +8,7 @@ package utils
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,7 +23,7 @@ const (
 )
 
 // Printfln prints a formated error, prefixed and postfixed by a new line.
-func Errorfln(format string, a ...interface{}) {
+func Errorfln(format string, a ...any) {
 	//fmt.Print(time.Now().Format(time.StampMilli) + " ") //time.RFC3339=ISO 8601
 	fmt.Println()
 	fmt.Printf("ERROR: "+format, a...)
@@ -30,7 +31,7 @@ func Errorfln(format string, a ...interface{}) {
 }
 
 // Printfln prints a formated warning, prefixed and postfixed by a new line.
-func Warnfln(format string, a ...interface{}) {
+func Warnfln(format string, a ...any) {
 	fmt.Println()
 	//fmt.Print(time.Now().Format(time.StampMilli) + " ") //time.RFC3339=ISO 8601
 	fmt.Printf("WARNING: "+format, a...)
@@ -38,7 +39,7 @@ func Warnfln(format string, a ...interface{}) {
 }
 
 // Printfln prints a formated information, prefixed and postfixed by a new line.
-func Infofln(format string, a ...interface{}) {
+func Infofln(format string, a ...any) {
 	fmt.Println()
 	//fmt.Print(time.Now().Format(time.StampMilli) + " ") //time.RFC3339=ISO 8601
 	fmt.Printf("INFO: "+format, a...)
@@ -46,15 +47,15 @@ func Infofln(format string, a ...interface{}) {
 }
 
 // Printfln prints a formated message, followed by a new line.
-func Printfln(format string, a ...interface{}) {
+func Printfln(format string, a ...any) {
 	//fmt.Print(time.Now().Format(time.StampMilli) + " ") //time.RFC3339=ISO 8601
 	fmt.Printf(format, a...)
 	fmt.Println()
 }
 
-// SetAllFilePermissions sets all file permissions (777).
+// SetAllFilePermissions sets all file permissions (511).
 func SetAllFilePermissions(path string) error {
-	return os.Chmod(path, os.ModePerm)
+	return os.Chmod(path, os.ModePerm) //nolint:gosec
 }
 
 // ReplaceFileExtension replaces the file extension on the given file path.
@@ -97,17 +98,25 @@ func CopyFile(src, dst string) error {
 		return fmt.Errorf("%s and %s are the same file", src, dst)
 	}
 
-	in, err := os.Open(absSrc)
+	in, err := os.Open(absSrc) //nolint:gosec
 	if err != nil {
 		return err
 	}
-	defer in.Close()
+	defer func() {
+		if err := in.Close(); err != nil {
+			log.Fatalf("failed to close %s (%s)", src, err.Error())
+		}
+	}()
 
-	out, err := os.Create(absDst)
+	out, err := os.Create(absDst) //nolint:gosec
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func() {
+		if err := out.Close(); err != nil {
+			log.Fatalf("failed to close %s (%s)", dst, err.Error())
+		}
+	}()
 
 	if _, err := io.Copy(out, in); err != nil {
 		return err

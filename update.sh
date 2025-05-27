@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #go
-old_go_version="1.22"
-new_go_version="1.23"
+old_go_version="1.23"
+new_go_version="1.24"
 
 #seek & replace
 echo "go ${old_go_version} -> ${new_go_version}" 
