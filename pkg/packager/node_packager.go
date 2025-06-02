@@ -278,7 +278,6 @@ func (p *NodePackager) npmInstall(packageName string) error {
 
 	npmArgs := []string{
 		"install",
-		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--registry=%s", p.Registry),
 		"--no-fund",
 		"--omit=dev",
@@ -296,7 +295,9 @@ func (p *NodePackager) npmInstall(packageName string) error {
 		npmArgs = append(npmArgs, packageName)
 	}
 
-	return p.execute(exec.Command("npm", npmArgs...)) //nolint:gosec
+	cmd := exec.Command("npm", npmArgs...)
+	cmd.Dir = p.tempDir
+	return p.execute(cmd)
 }
 
 // npmBundleDeps installs module 'https://www.npmjs.com/package/bundle-deps' and runs 'bundle-deps' for current library to bundle the dependencies.
@@ -308,7 +309,6 @@ func (p *NodePackager) npmBundleDeps() error {
 
 	npmArgs := []string{
 		"install",
-		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--registry=%s", p.Registry),
 		"bundle-deps",
 		"--no-save",
@@ -323,7 +323,9 @@ func (p *NodePackager) npmBundleDeps() error {
 	}
 
 	// Install bundle-deps
-	err := p.execute(exec.Command("npm", npmArgs...)) //nolint:gosec
+	cmd := exec.Command("npm", npmArgs...)
+	cmd.Dir = p.tempDir
+	err := p.execute(cmd)
 	if err != nil {
 		return err
 	}
@@ -334,29 +336,9 @@ func (p *NodePackager) npmBundleDeps() error {
 	nodeArgs := []string{
 		path.Join(p.tempDir, "node_modules", "bundle-deps", "bundle-deps.js")}
 
-	// Reset working dir
-	defer func() {
-		if p.Verbose {
-			utils.Printfln("reset working dir to %s ...", p.workingDir)
-		}
-
-		if err := os.Chdir(p.workingDir); err != nil {
-			p.spinner.Describe(fmt.Sprintf("failed to reset working dir: %v", err))
-			utils.Warnfln("failed to reset working dir: %v", err)
-		}
-	}()
-
-	if p.Verbose {
-		utils.Printfln("changing working dir to %s ...", p.tempDir)
-	}
-
-	// We need to change current working dir to temp dir to make bundle-deps work correctly,
-	// which needs to be run at package.json level.
-	if err := os.Chdir(p.tempDir); err != nil {
-		return err
-	}
-
-	return p.execute(exec.Command("node", nodeArgs...)) //nolint:gosec
+	cmd = exec.Command("node", nodeArgs...)
+	cmd.Dir = p.tempDir
+	return p.execute(cmd)
 }
 
 // npmAuditFix runs 'npm audit fix' in production mode.
@@ -372,7 +354,6 @@ func (p *NodePackager) npmAuditFix() error {
 	npmArgs := []string{
 		"audit",
 		"fix",
-		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--registry=%s", defaultRegistry),
 		fmt.Sprintf("--audit-level=%s", p.AuditLevel),
 		"--only=prod",
@@ -387,7 +368,9 @@ func (p *NodePackager) npmAuditFix() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	if err := p.execute(exec.Command("npm", npmArgs...)); err != nil { //nolint:gosec
+	cmd := exec.Command("npm", npmArgs...)
+	cmd.Dir = p.tempDir
+	if err := p.execute(cmd); err != nil {
 		return fmt.Errorf("vulnerability fix (level: %v) failed: try again with a decreased 'audit-level'", p.AuditLevel)
 	}
 
@@ -406,7 +389,6 @@ func (p *NodePackager) npmAudit() error {
 
 	npmArgs := []string{
 		"audit",
-		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--registry=%s", defaultRegistry),
 		fmt.Sprintf("--audit-level=%s", p.AuditLevel),
 		"--only=prod",
@@ -421,11 +403,13 @@ func (p *NodePackager) npmAudit() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	if err := p.execute(exec.Command("npm", npmArgs...)); err != nil { //nolint:gosec
+	cmd := exec.Command("npm", npmArgs...)
+	cmd.Dir = p.tempDir
+	if err := p.execute(cmd); err != nil {
 		return fmt.Errorf("vulnerability audit (level: %v) failed: try again with '--no-audit' or increased 'audit-level'", p.AuditLevel)
 	}
 
-	return p.execute(exec.Command("npm", npmArgs...)) //nolint:gosec
+	return nil
 }
 
 // npmPack packs the package to a tarball (*.tgz).
@@ -434,7 +418,6 @@ func (p *NodePackager) npmPack() error {
 
 	npmArgs := []string{
 		"pack",
-		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--registry=%s", p.Registry),
 	}
 
@@ -446,31 +429,13 @@ func (p *NodePackager) npmPack() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	// Reset working dir
-	defer func() {
-		if p.Verbose {
-			utils.Printfln("reset working dir to %s ...", p.workingDir)
-		}
-
-		if err := os.Chdir(p.workingDir); err != nil {
-			utils.Warnfln("failed to reset working dir: %v", err)
-		}
-	}()
-
-	if p.Verbose {
-		utils.Printfln("changing working dir to %s ...", p.tempDir)
-	}
-
-	// We need to change current working dir to temp dir to make bundle-deps work correctly,
-	// which needs to be run at package.json level.
-	if err := os.Chdir(p.tempDir); err != nil {
-		return err
-	}
-
-	tarballName, err := p.executeStdout(exec.Command("npm", npmArgs...)) //nolint:gosec
+	cmd := exec.Command("npm", npmArgs...)
+	cmd.Dir = p.tempDir
+	tarballName, err := p.executeStdout(cmd)
 	if err != nil {
 		return err
 	}
+
 	p.tarballName = strings.TrimSpace(tarballName)
 	p.tarballPath = path.Join(p.tempDir, p.tarballName)
 	return nil
@@ -758,7 +723,6 @@ func (p *NodePackager) getWorkingDir() error {
 
 // createTempDir creates and returns the temp dir.
 func (p *NodePackager) createTempDir() error {
-
 	// Create temp dir
 	tempDir, err := os.MkdirTemp(p.workingDir, p.libraryNameToFolderName(p.libraryNameWithoutVersion)+"-")
 	if err != nil {
@@ -816,12 +780,19 @@ func (p *NodePackager) executeStdout(cmd *exec.Cmd) (string, error) {
 	return output.String(), nil
 }
 
-// libraryNameToFolderName returns the library name as a folder name by replacing all file path chars ('/', ':') and '@' with underscores '_'.
+// libraryNameToFolderName converts the library name to a valid folder name, by replacing special path chars ('\', '/', ':', '.', '@') by  '_'.
 func (p *NodePackager) libraryNameToFolderName(name string) string {
 	folder := filepath.ToSlash(name)
-	folder = strings.ReplaceAll(folder, "@", "_")
-	folder = strings.ReplaceAll(folder, string(os.PathSeparator), "_")
-	folder = strings.ReplaceAll(folder, string(os.PathListSeparator), "_")
+
+	charsToReplace := []string{
+		".",
+		"@",
+		"/",
+		string(os.PathListSeparator)}
+
+	for _, c := range charsToReplace {
+		folder = strings.ReplaceAll(folder, c, "_")
+	}
 	return folder
 }
 
