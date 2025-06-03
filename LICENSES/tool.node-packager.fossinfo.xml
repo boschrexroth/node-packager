@@ -38,9 +38,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/golang/go"
-    Version="1.22.8"
+    Version="1.24.2"
     HomePage="https://github.com/golang/go"
-    Purl="pkg:golang/github.com/golang/go@v1.22.8"
+    Purl="pkg:golang/github.com/golang/go@v1.24.2"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -214,9 +214,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/schollz/progressbar/v3"
-    Version="3.17.0"
+    Version="3.18.0"
     HomePage="https://github.com/schollz/progressbar/v3"
-    Purl="pkg:golang/github.com/schollz/progressbar/v3@v3.17.0"
+    Purl="pkg:golang/github.com/schollz/progressbar/v3@v3.18.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -255,9 +255,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/stretchr/testify"
-    Version="1.9.0"
+    Version="1.10.0"
     HomePage="https://github.com/stretchr/testify"
-    Purl="pkg:golang/github.com/stretchr/testify@v1.9.0"
+    Purl="pkg:golang/github.com/stretchr/testify@v1.10.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -296,9 +296,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/sys"
-    Version="0.27.0"
+    Version="0.33.0"
     HomePage="https://golang.org/x/sys"
-    Purl="pkg:golang/golang.org/x/sys@v0.27.0"
+    Purl="pkg:golang/golang.org/x/sys@v0.33.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -343,9 +343,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/term"
-    Version="0.26.0"
+    Version="0.32.0"
     HomePage="https://golang.org/x/term"
-    Purl="pkg:golang/golang.org/x/term@v0.26.0"
+    Purl="pkg:golang/golang.org/x/term@v0.32.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
