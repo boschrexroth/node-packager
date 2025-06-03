@@ -23,8 +23,8 @@ const (
 	TestLibNativeWithPrebuilds = "node-red-contrib-usb" //"node-red-contrib-modbus"
 
 	TestLibVersioned       = TestLibDataView + "@0.0.3"
-	TestLibScoped          = "@flowfuse/node-red-dashboard"
-	TestLibScopedVersioned = TestLibScoped + "@1.16.0"
+	TestLibScoped          = "@flowfuse/node-red-dashboard-2-user-addon"
+	TestLibScopedVersioned = TestLibScoped + "@1.1.0"
 )
 
 type NodePackagerTestSuite struct {
