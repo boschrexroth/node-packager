@@ -28,7 +28,9 @@ jobs:
 
       - name: Update
         run: |
-          ./update.sh
+          go get -u ./...
+          go mod vendor
+          go mod tidy
 
       - name: Build
         run: |
