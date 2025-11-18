@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/boschrexroth/node-packager/pkg/utils"
 	"github.com/stretchr/testify/suite"
-	"lo-stash.de.bosch.com/icx/tool.node-packager.git/pkg/utils"
 )
 
 const (
@@ -97,7 +97,7 @@ func (s *NodePackagerTestSuite) TestPackDataView() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 
 	s.False(s.p.hasNativeModules)
@@ -121,7 +121,7 @@ func (s *NodePackagerTestSuite) TestPackNativeWithPrebuilds() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 
 	s.True(s.p.hasNativeModules)
@@ -145,7 +145,7 @@ func (s *NodePackagerTestSuite) TestPackVersioned() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 
 	s.False(s.p.hasNativeModules)
@@ -169,7 +169,7 @@ func (s *NodePackagerTestSuite) TestPackScoped() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 
 	s.False(s.p.hasNativeModules)
@@ -193,7 +193,7 @@ func (s *NodePackagerTestSuite) TestPackScopedVersioned() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 
 	s.False(s.p.hasNativeModules)
@@ -219,7 +219,7 @@ func (s *NodePackagerTestSuite) TestPackOpcUa() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 
 	s.False(s.p.hasNativeModules)
@@ -243,7 +243,7 @@ func (s *NodePackagerTestSuite) TestPackKeepTmp() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.DirExists(s.p.tempDir)
 }
 
@@ -262,7 +262,7 @@ func (s *NodePackagerTestSuite) TestPackAuditFix() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 }
 
@@ -281,7 +281,7 @@ func (s *NodePackagerTestSuite) TestPackNoAudit() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 }
 
@@ -300,7 +300,7 @@ func (s *NodePackagerTestSuite) TestPackVerbose() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 }
 
@@ -334,7 +334,7 @@ func (s *NodePackagerTestSuite) TestPackSrcDir() {
 	s.NoError(err)
 	s.NotEmpty(tarball)
 	s.FileExists(tarball)
-	s.Equal(".tgz", filepath.Ext(tarball))
+	s.Equal(tarballSuffix, filepath.Ext(tarball))
 	s.NoDirExists(s.p.tempDir)
 }
 

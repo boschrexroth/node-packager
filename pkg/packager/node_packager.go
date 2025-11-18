@@ -8,6 +8,7 @@ package packager
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -20,8 +21,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/boschrexroth/node-packager/pkg/utils"
 	bar "github.com/schollz/progressbar/v3"
-	"lo-stash.de.bosch.com/icx/tool.node-packager.git/pkg/utils"
 )
 
 const (
@@ -30,6 +31,7 @@ const (
 	prebuildLinuxAmd64 = "linux-x64"
 	defaultAuditLevel  = "high"
 	defaultRegistry    = "https://registry.npmjs.org"
+	tarballSuffix      = ".tgz"
 	spinnerTypeLinux   = 11 // ⣯ (not working on windows) -> ./vendor/github.com/schollz/progressbar/v3/spinners.go
 )
 
@@ -279,9 +281,14 @@ func (p *NodePackager) npmInstall(packageName string) error {
 	npmArgs := []string{
 		"install",
 		fmt.Sprintf("--registry=%s", p.Registry),
+		fmt.Sprintf("--prefix=%s", p.tempDir),
 		"--no-fund",
 		"--omit=dev",
 		"--no-audit"}
+
+	if p.hasSrcDir() {
+		npmArgs = append(npmArgs, "--ignore-scripts")
+	}
 
 	if len(p.Proxy) > 0 {
 		npmArgs = append(npmArgs, fmt.Sprintf("--proxy=%s", p.Proxy))
@@ -295,7 +302,7 @@ func (p *NodePackager) npmInstall(packageName string) error {
 		npmArgs = append(npmArgs, packageName)
 	}
 
-	cmd := exec.Command("npm", npmArgs...)
+	cmd := exec.Command("npm", npmArgs...) //nolint:gosec
 	cmd.Dir = p.tempDir
 	return p.execute(cmd)
 }
@@ -310,6 +317,7 @@ func (p *NodePackager) npmBundleDeps() error {
 	npmArgs := []string{
 		"install",
 		fmt.Sprintf("--registry=%s", p.Registry),
+		fmt.Sprintf("--prefix=%s", p.tempDir),
 		"bundle-deps",
 		"--no-save",
 		"--ignore-scripts",
@@ -323,7 +331,7 @@ func (p *NodePackager) npmBundleDeps() error {
 	}
 
 	// Install bundle-deps
-	cmd := exec.Command("npm", npmArgs...)
+	cmd := exec.Command("npm", npmArgs...) //nolint:gosec
 	cmd.Dir = p.tempDir
 	err := p.execute(cmd)
 	if err != nil {
@@ -336,7 +344,7 @@ func (p *NodePackager) npmBundleDeps() error {
 	nodeArgs := []string{
 		path.Join(p.tempDir, "node_modules", "bundle-deps", "bundle-deps.js")}
 
-	cmd = exec.Command("node", nodeArgs...)
+	cmd = exec.Command("node", nodeArgs...) //nolint:gosec
 	cmd.Dir = p.tempDir
 	return p.execute(cmd)
 }
@@ -355,6 +363,7 @@ func (p *NodePackager) npmAuditFix() error {
 		"audit",
 		"fix",
 		fmt.Sprintf("--registry=%s", defaultRegistry),
+		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--audit-level=%s", p.AuditLevel),
 		"--only=prod",
 		"--omit=dev",
@@ -368,7 +377,7 @@ func (p *NodePackager) npmAuditFix() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	cmd := exec.Command("npm", npmArgs...)
+	cmd := exec.Command("npm", npmArgs...) //nolint:gosec
 	cmd.Dir = p.tempDir
 	if err := p.execute(cmd); err != nil {
 		return fmt.Errorf("vulnerability fix (level: %v) failed: try again with a decreased 'audit-level'", p.AuditLevel)
@@ -390,6 +399,7 @@ func (p *NodePackager) npmAudit() error {
 	npmArgs := []string{
 		"audit",
 		fmt.Sprintf("--registry=%s", defaultRegistry),
+		fmt.Sprintf("--prefix=%s", p.tempDir),
 		fmt.Sprintf("--audit-level=%s", p.AuditLevel),
 		"--only=prod",
 		"--omit=dev",
@@ -403,7 +413,7 @@ func (p *NodePackager) npmAudit() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	cmd := exec.Command("npm", npmArgs...)
+	cmd := exec.Command("npm", npmArgs...) //nolint:gosec
 	cmd.Dir = p.tempDir
 	if err := p.execute(cmd); err != nil {
 		return fmt.Errorf("vulnerability audit (level: %v) failed: try again with '--no-audit' or increased 'audit-level'", p.AuditLevel)
@@ -419,6 +429,7 @@ func (p *NodePackager) npmPack() error {
 	npmArgs := []string{
 		"pack",
 		fmt.Sprintf("--registry=%s", p.Registry),
+		fmt.Sprintf("--prefix=%s", p.tempDir),
 	}
 
 	if len(p.Proxy) > 0 {
@@ -429,14 +440,23 @@ func (p *NodePackager) npmPack() error {
 		npmArgs = append(npmArgs, "--verbose")
 	}
 
-	cmd := exec.Command("npm", npmArgs...)
+	cmd := exec.Command("npm", npmArgs...) //nolint:gosec
 	cmd.Dir = p.tempDir
-	tarballName, err := p.executeStdout(cmd)
+	out, err := p.executeStdout(cmd)
 	if err != nil {
 		return err
 	}
 
-	p.tarballName = strings.TrimSpace(tarballName)
+	outLines := utils.SplitNonEmptyLines(strings.ReplaceAll(out, "\r\n", "\n"))
+	if len(outLines) == 0 {
+		return errors.New("tarball name could not be resolved")
+	}
+	tarballName := strings.TrimSpace(outLines[len(outLines)-1])
+	if !strings.HasSuffix(tarballName, tarballSuffix) {
+		return fmt.Errorf("unexpected tarball name: %s", tarballName)
+	}
+
+	p.tarballName = tarballName
 	p.tarballPath = path.Join(p.tempDir, p.tarballName)
 	return nil
 }

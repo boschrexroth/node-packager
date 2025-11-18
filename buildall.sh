@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# setup
 DIST=./dist
 
 # clean dist

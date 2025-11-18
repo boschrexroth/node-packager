@@ -245,6 +245,13 @@ func HumanizedFileSize(file string) (string, error) {
 	}
 }
 
+// SplitNonEmptyLines splits a string, seperated by '\n' by omitting empty lines.
+func SplitNonEmptyLines(s string) []string {
+	return strings.FieldsFunc(s, func(r rune) bool {
+		return r == '\n'
+	})
+}
+
 // FileSize returns the size of the given file in bytes.
 func FileSize(file string) (int64, error) {
 	fi, err := os.Stat(file)

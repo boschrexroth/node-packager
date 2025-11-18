@@ -374,3 +374,13 @@ func TestFileSizeNotExists(t *testing.T) {
 	assert.Error(t, err)
 	assert.Equal(t, size, int64(0))
 }
+
+func TestSplitNonEmptyLines(t *testing.T) {
+	// Arrange
+	s := "This\nis\na\ntest\nstring\n"
+
+	// Act
+	arr := SplitNonEmptyLines(s)
+	assert.Len(t, arr, 5)
+	assert.Equal(t, "string", arr[len(arr)-1])
+}

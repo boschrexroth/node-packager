@@ -10,12 +10,12 @@ import (
 	"fmt"
 	"os"
 
-	"lo-stash.de.bosch.com/icx/tool.node-packager.git/pkg/packager"
-	"lo-stash.de.bosch.com/icx/tool.node-packager.git/pkg/utils"
+	"github.com/boschrexroth/node-packager/pkg/packager"
+	"github.com/boschrexroth/node-packager/pkg/utils"
 )
 
 const (
-	Version       = "1.2.0"
+	Version       = "1.2.1"
 	Name          = "Node-RED Node Packager"
 	Description   = "Packs a Node-RED library to a tarball (*.tgz) for Node-RED palette import."
 	Examples      = "Examples:\n   node-packager node-red-contrib-ctrlx-automation\n   node-packager --verbose node-red-contrib-ctrlx-automation\n   node-packager --no-audit node-red-contrib-ctrlx-automation\n   node-packager --audit-fix node-red-contrib-ctrlx-automation"
