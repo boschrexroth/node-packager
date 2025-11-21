@@ -4,7 +4,7 @@ set -e
 #version
 
 old_version="1.2.1"
-new_version="1.2.1"
+new_version="1.2.2"
 
 #go
 old_go_version="1.24"
