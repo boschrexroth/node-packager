@@ -12,8 +12,7 @@ OUT_DIR=${DIST}/${GO_OS}_${GO_ARCH}
 go vet ./...
 
 # install and run go linter
-# sudo snap install golangci-lint --classic
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+sudo snap install golangci-lint --classic
 golangci-lint run --enable=gosec --modules-download-mode=vendor
 
 echo "working dir: $(pwd)"
