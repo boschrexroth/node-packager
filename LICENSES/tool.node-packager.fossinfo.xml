@@ -38,9 +38,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/golang/go"
-    Version="1.24.2"
+    Version="1.24.11"
     HomePage="https://github.com/golang/go"
-    Purl="pkg:golang/github.com/golang/go@v1.24.2"
+    Purl="pkg:golang/github.com/golang/go@v1.24.11"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -214,9 +214,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="github.com/schollz/progressbar/v3"
-    Version="3.18.0"
+    Version="3.19.0"
     HomePage="https://github.com/schollz/progressbar/v3"
-    Purl="pkg:golang/github.com/schollz/progressbar/v3@v3.18.0"
+    Purl="pkg:golang/github.com/schollz/progressbar/v3@v3.19.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -296,9 +296,9 @@ SOFTWARE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/sys"
-    Version="0.33.0"
+    Version="0.40.0"
     HomePage="https://golang.org/x/sys"
-    Purl="pkg:golang/golang.org/x/sys@v0.33.0"
+    Purl="pkg:golang/golang.org/x/sys@v0.40.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">
@@ -343,9 +343,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </FossComponent>
   <FossComponent
     Name="golang.org/x/term"
-    Version="0.32.0"
+    Version="0.38.0"
     HomePage="https://golang.org/x/term"
-    Purl="pkg:golang/golang.org/x/term@v0.32.0"
+    Purl="pkg:golang/golang.org/x/term@v0.38.0"
     Usage="AsIs"
     IntegrationMechanism="Go"
     MergedFrom="tool.node-packager.fossinfo.json">

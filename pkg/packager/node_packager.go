@@ -248,7 +248,7 @@ func (p *NodePackager) finish(err error) (string, error) {
 	if p.hasNativeModules {
 		summary = "Native "
 	}
-	summary = fmt.Sprintf("%sLibrary '%s' [%s] successfully packed in %s.", summary, p.tarballName, p.tarballSize, time.Since(p.startTime))
+	summary = fmt.Sprintf("%sLibrary '%s' [%s] successfully packed in %s", summary, p.tarballName, p.tarballSize, time.Since(p.startTime).Truncate(time.Second))
 	fmt.Println(summary)
 
 	return p.tarballPath, nil
