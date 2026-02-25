@@ -104,7 +104,7 @@ func CopyFile(src, dst string) error {
 	}
 	defer func() {
 		if err := in.Close(); err != nil {
-			log.Fatalf("failed to close %s (%s)", src, err.Error())
+			log.Fatalf("failed to close %s (%s)", src, err.Error()) //nolint:gosec
 		}
 	}()
 
@@ -114,7 +114,7 @@ func CopyFile(src, dst string) error {
 	}
 	defer func() {
 		if err := out.Close(); err != nil {
-			log.Fatalf("failed to close %s (%s)", dst, err.Error())
+			log.Fatalf("failed to close %s (%s)", dst, err.Error()) //nolint:gosec
 		}
 	}()
 

@@ -7,7 +7,7 @@ old_version="1.2.2"
 new_version="1.2.2"
 
 # go
-old_go_version="1.24"
+old_go_version="1.25"
 new_go_version="1.25"
 
 # seek & replace
