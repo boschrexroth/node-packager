@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-# version
+silent=${1:-false}
 
+# version
 old_version="1.2.2"
 new_version="1.2.2"
 
@@ -10,11 +11,13 @@ new_version="1.2.2"
 old_go_version="1.25"
 new_go_version="1.25"
 
-# seek & replace
 echo "go ${old_version} -> ${new_version}" 
 echo "go ${old_go_version} -> ${new_go_version}" 
 echo
-read -r -p "Press enter to continue"
+
+if [[ $silent == false ]]; then
+  read -r -p "Press enter to continue"
+fi
 
 # main.go
 find  ./cmd/node-packager -maxdepth 1 -name main.go -type f -exec sed -i "s/${old_version}/${new_version}/g" {} \;
