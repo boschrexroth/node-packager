@@ -9,7 +9,7 @@ new_version="1.2.2"
 
 # go
 old_go_version="1.25"
-new_go_version="1.25"
+new_go_version="1.26"
 
 echo "go ${old_version} -> ${new_version}" 
 echo "go ${old_go_version} -> ${new_go_version}" 
@@ -32,3 +32,6 @@ find . -maxdepth 1 -name go.mod -type f -exec sed -i "s/go ${old_go_version}/go 
 go get -u ./...
 go mod vendor
 go mod tidy
+
+./build.sh
+./vulncheck.sh

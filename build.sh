@@ -12,10 +12,13 @@ OUT_DIR=${DIST}/${GO_OS}_${GO_ARCH}
 go vet ./...
 
 # install and run go linter
-sudo snap install golangci-lint --classic
+#sudo snap install golangci-lint --classic
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+go version
+golangci-lint version
 golangci-lint run --enable=gosec --modules-download-mode=vendor
 
-echo "working dir: $(pwd)"
 echo "build: GOOS=$GO_OS GOARCH=$GO_ARCH OUTDIR=$OUT_DIR ..."
 mkdir -p $OUT_DIR 
 
