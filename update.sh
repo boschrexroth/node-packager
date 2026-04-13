@@ -8,11 +8,11 @@ old_version="1.2.2"
 new_version="1.2.2"
 
 # go
-old_go_version="1.25"
+old_go_version="1.26"
 new_go_version="1.26"
 
-echo "go ${old_version} -> ${new_version}" 
-echo "go ${old_go_version} -> ${new_go_version}" 
+echo "Version ${old_version} -> ${new_version}" 
+echo "go      ${old_go_version} -> ${new_go_version}" 
 echo
 
 if [[ $silent == false ]]; then
