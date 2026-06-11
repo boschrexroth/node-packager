@@ -20,7 +20,7 @@ import (
 const (
 	TestLibDataView            = "node-red-contrib-data-view"
 	TestLibOpcUa               = "node-red-contrib-opcua"
-	TestLibNativeWithPrebuilds = "node-red-contrib-usb" //"node-red-contrib-modbus"
+	TestLibNativeWithPrebuilds = "node-red-node-serialport" //"node-red-contrib-modbus"
 
 	TestLibVersioned       = TestLibDataView + "@0.0.3"
 	TestLibScoped          = "@flowfuse/node-red-dashboard-2-user-addon"
