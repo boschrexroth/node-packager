@@ -9,7 +9,7 @@ new_version="1.2.2"
 
 # go
 old_go_version="1.26"
-new_go_version="1.26"
+new_go_version="1.27"
 
 echo "Version ${old_version} -> ${new_version}" 
 echo "go      ${old_go_version} -> ${new_go_version}" 

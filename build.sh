@@ -13,7 +13,7 @@ go vet ./...
 
 # install and run go linter
 #sudo snap install golangci-lint --classic
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 
 go version
 golangci-lint version
