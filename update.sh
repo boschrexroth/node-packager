@@ -8,8 +8,8 @@ old_version="1.2.2"
 new_version="1.2.2"
 
 # go
-old_go_version="1.26"
-new_go_version="1.27"
+old_go_version=$(awk '$1 == "go" {print $2; exit}' go.mod)
+new_go_version=$(./go.sh)
 
 echo "Version ${old_version} -> ${new_version}" 
 echo "go      ${old_go_version} -> ${new_go_version}" 
